@@ -10,6 +10,9 @@ function App() {
         todos: [],
         isLoading: false,
     })
+  const [isEdit, setIsEdit]= useState(false)
+  const [title, setTitle] = useState('')
+  const [todo, setTodo] = useState({})
 
     const {Title} = Typography
     const apiURL = "http://localhost:8000/api/todos/"
@@ -40,6 +43,10 @@ function App() {
       checked = record.completed
        return <Checkbox onClick={() => toggleCompleted(record)} checked={checked}/>
       },
+    }
+
+    const updateTitle = (title) => {
+      setTitle(title)
     }
 
     const addTodo = (title) => {
@@ -73,6 +80,31 @@ function App() {
       return ''
     }
 
+    const setTodoToEdit = (todo) => {
+      setIsEdit(true)
+      setTitle(todo.title)
+      setTodo(todo)
+    }
+
+    const onEditTodo = (todo) => {
+      const apiURL = `http://localhost:8000/api/todo/${todo.id}/`
+
+      fetch(apiURL, {
+        method: 'PATCH',
+        body: JSON.stringify({title: title}),
+        headers: {'Content-Type': 'application/json'}
+      }).then(response => response.json())
+      .then(data => {
+        const updatedTodos = appState.todos.map(item => {
+          if(item.id === data.id) item.title = title
+          return item
+        })
+        setAppState({todos: updatedTodos})
+        setIsEdit(false)
+        setTitle('')
+      })
+    }
+
     useEffect(() => {
         setAppState({isLoading: true})
         
@@ -100,7 +132,7 @@ function App() {
       <Row>
         <Col span={6} xs={1}></Col>
         <Col span={24} xs={22}>
-          <AddTodo onAddTodo={addTodo} />
+          <AddTodo onAddTodo={addTodo} onEditTodo={onEditTodo} isEdit={isEdit} title={title} updateTitle={updateTitle} todo={todo} />
         </Col>
         <Col span={6} xs={1}></Col>
       </Row>
@@ -108,7 +140,7 @@ function App() {
       <Row>
         <Col span={6} xs={1}></Col>
         <Col span={12} xs={22}>
-          <Todos loading={appState.isLoading} todos={appState.todos} rowSelection={rowSelection} rowClassName={rowClassName} onTodoDelete={onTodoDelete} />
+          <Todos loading={appState.isLoading} todos={appState.todos} rowSelection={rowSelection} rowClassName={rowClassName} onTodoDelete={onTodoDelete} setTodoToEdit={setTodoToEdit} />
         </Col>
         <Col span={6} xs={1}></Col>
       </Row>

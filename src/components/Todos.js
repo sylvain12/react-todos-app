@@ -2,7 +2,7 @@ import React from 'react'
 import { Table, Button, Popconfirm, message } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
-export default function Todos({todos, rowSelection, loading, rowClassName, onTodoDelete}) {
+export default function Todos({todos, rowSelection, loading, rowClassName, onTodoDelete, setTodoToEdit}) {
 
     const confirmDeleteTodo = (record) => {
         onTodoDelete(record)
@@ -22,9 +22,10 @@ export default function Todos({todos, rowSelection, loading, rowClassName, onTod
         render: (text, record) => (
             <div>
              <Button
+                    onClick={() => setTodoToEdit(record)}
                     icon={<EditOutlined />}
                     type='primary'
-                    style={{marginRight:'1rem'}}
+                    style={{marginRight:'1rem', display: record.completed ? 'none' : ''}}
                 />
             
                 <Popconfirm
@@ -44,14 +45,6 @@ export default function Todos({todos, rowSelection, loading, rowClassName, onTod
         ),
         align: 'right'
     }
-    // {
-    //     title: 'Actions',
-    //     render: (text, record) => {
-    //         <Popconfirm title='Delete?' onConfirm={() => alert('deleted')}>
-    //             <Button>Delete</Button>
-    //         </Popconfirm>
-    //     }
-    // }
 ]
     return (
         <Table rowSelection={rowSelection} dataSource={todos} columns={columns} rowKey={todo => todo.id} loading={loading} rowClassName={rowClassName}/>

@@ -1,24 +1,27 @@
 import React, {useState} from 'react'
 import {Row, Col, Input, Button, Form, Typography} from 'antd'
 
-export default function AddTodo({onAddTodo}) {
-    const [title, setTitle] = useState('')
-    // const {Text} = Typography
+export default function AddTodo({onAddTodo, onEditTodo, isEdit, title, updateTitle, todo}) {
 
-    const resetTitle = () => setTitle('')
+    const resetTitle = () => updateTitle('')
 
     const addTodo = () => {
         onAddTodo(title)
        resetTitle()
     }
+
+    const editTodo = () => {
+        onEditTodo(todo)
+    }
     return (
         <>
         <Row>
             <Col span={20}>
-                <Input placeholder="Enter your todo" name="title" onInput={(e) => setTitle(e.target.value)} value={title} />
+                <Input placeholder="Enter your todo" name="title" onInput={(e) => updateTitle(e.target.value)} value={title} />
             </Col>
             <Col span={4}>
-                <Button onClick={addTodo} style={{width:'100%'}} type="primary">Add</Button>
+                {(!isEdit || title === '') ? <Button onClick={addTodo} style={{width:'100%'}} type="primary">Add</Button> : <Button onClick={editTodo} style={{width:'100%'}} type="primary">Edit</Button> }
+                
             </Col>
         </Row>
     </>
