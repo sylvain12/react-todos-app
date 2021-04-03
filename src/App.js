@@ -9,15 +9,10 @@ function App() {
   const [appState, setAppState] = useState({
         todos: [],
         isLoading: false,
-        // selectedRows: []
     })
 
     const {Title} = Typography
     const apiURL = "http://localhost:8000/api/todos/"
-
-    // const rowSelection = (todo) => {
-    //   if(todo.completed) console.log('todo.name')
-    // }
 
     const toggleCompleted  = (todo) => {
       const apiURL = `http://localhost:8000/api/todo/${todo.id}/`
@@ -45,19 +40,6 @@ function App() {
       checked = record.completed
        return <Checkbox onClick={() => toggleCompleted(record)} checked={checked}/>
       },
-      // onSelect: (record, selected, selectedRows, nativeEvent) => {
-      //   console.log(selectedRows)
-      // }
-    }
-
-    const onRow = (record,index) => {
-      // if(record.completed) 
-      // console.log(record.title)
-      return {
-        style: () => {
-          console.log('style')
-        }
-      }
     }
 
     const addTodo = (title) => {
@@ -75,6 +57,17 @@ function App() {
       })
     }
 
+    const onTodoDelete = (todo) => {
+      const apiURL = `http://localhost:8000/api/todo/${todo.id}/`
+      fetch(apiURL, {
+        method: 'DELETE',
+      }).then(response => '')
+      .then(() => {
+        const newTodos = appState.todos.filter(item => item.id !== todo.id)
+          setAppState({todos: newTodos})
+      })
+    }
+
     const rowClassName = (record, index) => {
       if(record.completed) return 'is-completed todo disabled'
       return ''
@@ -88,8 +81,7 @@ function App() {
           .then(response => response.json())
           .then(data => setAppState({
             todos: data, 
-            isLoading: false, 
-            // selectedRows: data.filter(todo => todo.completed) 
+            isLoading: false,
           }))
         }, 1000)
       
@@ -116,7 +108,7 @@ function App() {
       <Row>
         <Col span={6} xs={1}></Col>
         <Col span={12} xs={22}>
-          <Todos loading={appState.isLoading} todos={appState.todos} rowSelection={rowSelection} rowClassName={rowClassName} onRow={onRow} />
+          <Todos loading={appState.isLoading} todos={appState.todos} rowSelection={rowSelection} rowClassName={rowClassName} onTodoDelete={onTodoDelete} />
         </Col>
         <Col span={6} xs={1}></Col>
       </Row>
