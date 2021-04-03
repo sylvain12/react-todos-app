@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { Checkbox, Row, Col, Typography } from 'antd';
 import Todos from './components/Todos'
+import AddTodo from './components/AddTodo'
 import 'antd/dist/antd.css';
 import './App.css'
-import { Checkbox, Row, Col, Typography } from 'antd';
 
 function App() {
   const [appState, setAppState] = useState({
@@ -12,6 +13,7 @@ function App() {
     })
 
     const {Title} = Typography
+    const apiURL = "http://localhost:8000/api/todos/"
 
     // const rowSelection = (todo) => {
     //   if(todo.completed) console.log('todo.name')
@@ -38,6 +40,21 @@ function App() {
       }
     }
 
+    const addTodo = (title) => {
+      fetch(apiURL, {
+        method: 'POST',
+        body: JSON.stringify({title: title}),
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      }).then(response => response.json())
+      .then(todo => {
+        setAppState({
+          todos: [todo, ...appState.todos]
+        })
+      })
+    }
+
     const rowClassName = (record, index) => {
       if(record.completed) return 'is-completed todo disabled'
       return ''
@@ -45,7 +62,7 @@ function App() {
 
     useEffect(() => {
         setAppState({isLoading: true})
-        const apiURL = "http://localhost:8000/api/todos/"
+        
         setTimeout(() => {
           fetch(apiURL)
           .then(response => response.json())
@@ -66,6 +83,14 @@ function App() {
             <Title level={2}>Todos App</Title>
           </Col>
           <Col span={6} xs={1}></Col>
+      </Row>
+
+      <Row>
+        <Col span={6} xs={1}></Col>
+        <Col span={24} xs={22}>
+          <AddTodo onAddTodo={addTodo} />
+        </Col>
+        <Col span={6} xs={1}></Col>
       </Row>
 
       <Row>
