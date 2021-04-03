@@ -19,11 +19,31 @@ function App() {
     //   if(todo.completed) console.log('todo.name')
     // }
 
+    const toggleCompleted  = (todo) => {
+      const apiURL = `http://localhost:8000/api/todo/${todo.id}/`
+      fetch(apiURL, {
+        method: 'PATCH',
+        body: JSON.stringify({completed: !todo.completed}),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(response => response.json())
+      .then(data => {
+          const updatedTodos = appState.todos.map(todo => {
+            if(todo.id === data.id) todo.completed = data.completed
+            return todo
+          })
+          setAppState({
+            todos: updatedTodos
+          })
+      })
+    }
+
     const rowSelection = {
       hideSelectAll: true,
       renderCell: (checked, record, index, originNode) => {
       checked = record.completed
-       return <Checkbox checked={checked}/>
+       return <Checkbox onClick={() => toggleCompleted(record)} checked={checked}/>
       },
       // onSelect: (record, selected, selectedRows, nativeEvent) => {
       //   console.log(selectedRows)
@@ -32,7 +52,7 @@ function App() {
 
     const onRow = (record,index) => {
       // if(record.completed) 
-      console.log(record.title)
+      // console.log(record.title)
       return {
         style: () => {
           console.log('style')
