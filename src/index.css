@@ -2,3 +2,7 @@
   max-width: 114rem;
   margin: 0 auto;
 }
+
+.is-completed {
+  text-decoration: line-through;
+}
