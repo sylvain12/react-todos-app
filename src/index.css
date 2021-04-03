@@ -6,3 +6,8 @@
 .is-completed {
   text-decoration: line-through;
 }
+
+.todo.disabled {
+  /* background-color: #f4f4f4; */
+  opacity: .3;
+}
