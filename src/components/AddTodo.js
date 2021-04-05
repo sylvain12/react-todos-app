@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import {Row, Col, Input, Button, Form, Typography} from 'antd'
+import React from 'react'
+import {Row, Col, Input, Button} from 'antd'
 
 export default function AddTodo({onAddTodo, onEditTodo, isEdit, title, updateTitle, todo}) {
 

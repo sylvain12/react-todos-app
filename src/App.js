@@ -117,17 +117,13 @@ function App() {
 
     useEffect(() => {
         setAppState({isLoading: true})
-        
-        setTimeout(() => {
           fetch(apiURL)
           .then(response => response.json())
           .then(data => setAppState({
             todos: data, 
             isLoading: false,
           }))
-        }, 1000)
-      
-    }, [])
+    }, [apiURL])
 
   return (
     <div className="container">
