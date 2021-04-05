@@ -4,6 +4,16 @@ import Todos from './components/Todos'
 import AddTodo from './components/AddTodo'
 import 'antd/dist/antd.css';
 import './App.css'
+import 'process'
+
+
+function getApiBaseUrl() {
+  const ENV = process.env.REACT_TODO_APP_ENV
+  return ENV === 'dev'? 'http://localhost:8000' : 'https://django-todos-api.herokuapp.com'
+}
+
+const BASE_URL = getApiBaseUrl()
+console.log(BASE_URL)
 
 function App() {
   const [appState, setAppState] = useState({
@@ -15,10 +25,10 @@ function App() {
   const [todo, setTodo] = useState({})
 
     const {Title} = Typography
-    const apiURL = "http://localhost:8000/api/todos/"
+    const apiURL = `${BASE_URL}/api/todos/`
 
     const toggleCompleted  = (todo) => {
-      const apiURL = `http://localhost:8000/api/todo/${todo.id}/`
+      const apiURL = `${BASE_URL}/api/todo/${todo.id}/`
       fetch(apiURL, {
         method: 'PATCH',
         body: JSON.stringify({completed: !todo.completed}),
@@ -65,7 +75,7 @@ function App() {
     }
 
     const onTodoDelete = (todo) => {
-      const apiURL = `http://localhost:8000/api/todo/${todo.id}/`
+      const apiURL = `${BASE_URL}/api/todo/${todo.id}/`
       fetch(apiURL, {
         method: 'DELETE',
       }).then(response => '')
@@ -87,7 +97,7 @@ function App() {
     }
 
     const onEditTodo = (todo) => {
-      const apiURL = `http://localhost:8000/api/todo/${todo.id}/`
+      const apiURL = `${BASE_URL}/api/todo/${todo.id}/`
 
       fetch(apiURL, {
         method: 'PATCH',
